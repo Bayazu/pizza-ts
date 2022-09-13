@@ -1,18 +1,19 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { ChangeEvent, FC, useCallback, useRef, useState } from "react";
 import styles from "./Search.module.scss";
 import debounce from "lodash.debounce";
 import { setSearchValue } from "../../redux/slices/filterSlice";
 import { useDispatch } from "react-redux";
 
-const Search = (props) => {
+const Search: FC = () => {
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickClear = () => {
     dispatch(setSearchValue(""));
     setValue("");
-    inputRef.current.focus();
+
+    inputRef.current?.focus();
   };
 
   const updateSearchValue = useCallback(
@@ -22,7 +23,7 @@ const Search = (props) => {
     []
   );
 
-  const onChangeInput = (event) => {
+  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
     updateSearchValue(event.target.value);
   };

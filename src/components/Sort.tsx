@@ -1,27 +1,45 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { TSort } from "../redux/slices/filterSlice";
 
-export const sortingNames = [
+type SortItem = {
+  name: string;
+  sort: string;
+};
+type SortProps = {
+  sortType: {
+    name: string;
+    sort: string;
+  };
+  onClickSort: (obj: TSort) => void;
+};
+
+export const sortingNames: SortItem[] = [
   { name: "популярности", sort: "rating" },
   { name: "цене", sort: "price" },
   { name: "алфавиту", sort: "title" },
 ];
 
-const Sort = ({ sortType, onClickSort }) => {
+const Sort: FC<SortProps> = ({ sortType, onClickSort }) => {
   const [visible, setVisible] = useState(false);
-  //const [sortIndex, setSortIndex] = useState(0);
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
-  const changeSortingNames = (index) => {
-    onClickSort(index);
+  const changeSortingNames = (obj: TSort) => {
+    onClickSort(obj);
     setVisible(false);
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (!event.path.includes(sortRef.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      console.log(event);
+
+      const _event = event as MouseEvent & {
+        path: Node[];
+      };
+
+      console.log(_event.path);
+
+      if (sortRef.current && !_event.path.includes(sortRef.current)) {
         setVisible(false);
-      } else {
-        setVisible(true);
       }
     };
     document.body.addEventListener("click", handleClickOutside);
@@ -57,7 +75,8 @@ const Sort = ({ sortType, onClickSort }) => {
           <ul>
             {sortingNames.map((obj, index) => (
               <li
-                className={sortType.sort === obj.sort ? "active" : null}
+                className={sortType.sort === obj.sort ? "active" : ""}
+                // @ts-ignore
                 onClick={() => changeSortingNames(obj)}
               >
                 {obj.name}

@@ -1,46 +1,61 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, selectCartItemById } from "../../redux/slices/cartSlice";
+import {
+  addItem,
+  selectCartItemById,
+  TCartItem,
+} from "../../redux/slices/cartSlice";
 import { Link } from "react-router-dom";
 
 const pizzasTypes = ["тонкое", "традиционное"];
 
-const PizzaBlock = (props) => {
-  const { id, sizes, price, title, types, imageUrl } = props;
+type PizzaBlockProps = {
+  id: string;
+  sizes: number[];
+  price: number;
+  title: string;
+  types: number[];
+  imageUrl: string;
+};
+
+const PizzaBlock: FC<PizzaBlockProps> = ({
+  id,
+  sizes,
+  price,
+  title,
+  types,
+  imageUrl,
+}) => {
   const dispatch = useDispatch();
   const cartItem = useSelector(selectCartItemById(id));
 
   const addedCount = cartItem ? cartItem.count : 0;
 
-  const [pizzaIndexSize, setIndexPizzaSize] = useState(0);
-  const [pizzaIndexType, setIndexPizzaType] = useState(0);
+  const [pizzaIndexSize, setIndexPizzaSize] = useState<number>(0);
+  const [pizzaIndexType, setIndexPizzaType] = useState<number>(0);
 
   const onClickAdd = () => {
-    const item = {
+    const item: TCartItem = {
       id,
       title,
       price,
       imageUrl,
       type: pizzasTypes[pizzaIndexType],
       size: sizes[pizzaIndexSize],
+      count: 0,
     };
     dispatch(addItem(item));
   };
 
-  const [pizzaCount, setPizzaCount] = useState(1);
   const availablePizzaTypes = types.map((el, index) => {
     return pizzasTypes[index];
   });
 
-  const addPizza = () => {
-    setPizzaCount((prevState) => prevState + 1);
-  };
-
-  const setPizzaSize = (index) => {
+  const setPizzaSize = (index: number) => {
     setIndexPizzaSize(index);
   };
 
-  const setPizzaType = (index) => {
+  const setPizzaType = (index: number) => {
     setIndexPizzaType(index);
   };
 
@@ -55,6 +70,7 @@ const PizzaBlock = (props) => {
           <ul>
             {availablePizzaTypes.map((el, index) => (
               <li
+                // @ts-ignore
                 className={index === pizzaIndexType ? "active" : null}
                 key={index}
                 onClick={() => {
@@ -69,6 +85,7 @@ const PizzaBlock = (props) => {
             {sizes.map((sizePizza, index) => (
               <li
                 key={index}
+                // @ts-ignore
                 className={index === pizzaIndexSize ? "active" : null}
                 onClick={() => setPizzaSize(index)}
               >
