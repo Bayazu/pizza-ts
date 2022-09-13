@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC } from "react";
 
 const categories = [
   "Все",
@@ -9,14 +9,19 @@ const categories = [
   "Закрытые",
 ];
 
-const Categories = ({ categoryId, onClickCategory }) => {
+type CategoriesProps = {
+  categoryId: number;
+  onClickCategory: (index: number) => void;
+};
+
+const Categories: FC<CategoriesProps> = ({ categoryId, onClickCategory }) => {
   return (
     <div className="categories">
       <ul>
         {categories.map((el, index) => (
           <li
             key={index}
-            className={categoryId === index ? "active" : null}
+            className={categoryId === index ? "active" : ""}
             onClick={() => onClickCategory(index)}
           >
             {el}

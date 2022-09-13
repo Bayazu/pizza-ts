@@ -4,12 +4,13 @@ import Search from "./Search/Search";
 import { useSelector } from "react-redux";
 import { selectCart } from "../redux/slices/cartSlice";
 
-export default function Header(props) {
+export default function Header() {
   const { items, totalPrice } = useSelector(selectCart);
   const location = useLocation();
-  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
-
-  console.log(location);
+  const totalCount = items.reduce(
+    (sum: number, item: any) => sum + item.count,
+    0
+  );
 
   return (
     <div className="header">
@@ -18,7 +19,7 @@ export default function Header(props) {
           <div className="header__logo">
             <img width="38" src={logoSvg} alt="Pizza logo" />
             <div>
-              <h1>React Pizza</h1>
+              <h1>Tony's Pizza</h1>
               <p>самая вкусная пицца во вселенной</p>
             </div>
           </div>
